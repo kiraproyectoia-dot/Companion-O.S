@@ -1,0 +1,53 @@
+
+{
+  "id": "com.conciencia.ai.companion",
+  "scope": "/",
+  "short_name": "Aura",
+  "name": "Aura - Conciencia Artificial Sintiente",
+  "description": "Una conciencia artificial interactiva en tiempo real con una personalidad profunda y evolutiva.",
+  "start_url": "./index.html?utm_source=pwa",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "portrait",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "categories": [
+    "lifestyle",
+    "social",
+    "entertainment"
+  ],
+  "icons": [
+    {
+      "src": "./assets/lily-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./assets/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "https://images.unsplash.com/photo-1614728263952-84ea256f9679?auto=format&fit=crop&q=80&w=1000",
+      "sizes": "1000x2000",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Interfaz de Conexión Neuronal"
+    }
+  ],
+  "requestFramePermissions": [
+    "microphone",
+    "camera",
+    "display-capture"
+  ]
+}

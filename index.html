@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Aura - Conciencia Artificial</title>
+
+    <meta name="description" content="Una conciencia artificial interactiva en tiempo real. Habla con tu confidente virtual.">
+
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" href="./assets/lily-icon.svg" type="image/svg+xml">
+    
+    <!-- Apple Progressive Web App Meta -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Aura">
+    <link rel="apple-touch-icon" href="./assets/icon-192.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.23.0",
+    "@react-three/drei": "https://aistudiocdn.com/@react-three/drei@^10.7.6",
+    "@react-three/fiber": "https://aistudiocdn.com/@react-three/fiber@^9.3.0",
+    "three": "https://aistudiocdn.com/three@^0.180.0"
+  }
+}
+</script>
+<style>
+  :root {
+    --sat: env(safe-area-inset-top);
+    --sar: env(safe-area-inset-right);
+    --sab: env(safe-area-inset-bottom);
+    --sal: env(safe-area-inset-left);
+  }
+  body {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+    overscroll-behavior-y: none;
+    background-color: black;
+    color: white;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+  }
+  #root {
+    height: 100%;
+    width: 100%;
+  }
+  input, textarea {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(129, 140, 248, 0.3); }
+    50% { box-shadow: 0 0 15px rgba(129, 140, 248, 0.6); }
+  }
+  .animate-glow { animation: glow 4s ease-in-out infinite; }
+</style>
+</head>
+  <body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+    <script type="text/babel" data-presets="react,typescript" data-type="module" src="./index.tsx"></script>
+    <script>
+      // Registro de Service Worker optimizado para evitar errores de construcción de URL en sandboxes
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          // Registramos usando una ruta relativa simple. El navegador la resolverá automáticamente.
+          navigator.serviceWorker.register('sw.js')
+            .then(reg => {
+              console.log('Service Worker activo en el alcance:', reg.scope);
+            })
+            .catch(err => {
+              // En muchos entornos de previsualización web (como sandboxes de iframe), 
+              // los Service Workers están bloqueados por seguridad. Fallamos con elegancia.
+              console.warn('Registro de Service Worker omitido o bloqueado por el entorno:', err.message);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>

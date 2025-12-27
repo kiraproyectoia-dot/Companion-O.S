@@ -1,0 +1,10 @@
+{
+  "name": "Companion O.S",
+  "description": "A real-time, voice-interactive AI companion with a deep, evolving personality. Engage in natural, meaningful conversations with your virtual confidante.",
+  "requestFramePermissions": [
+    "microphone",
+    "geolocation",
+    "camera",
+    "display-capture"
+  ]
+}
