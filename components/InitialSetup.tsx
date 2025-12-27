@@ -10,7 +10,6 @@ interface InitialSetupProps {
   onComplete: () => void;
 }
 
-// La secuencia de campos que el usuario debe completar
 const FIELD_SEQUENCE = ['userName', 'userGender', 'aiGender', 'userSociability'];
 
 const STEPS = [
@@ -167,7 +166,6 @@ export const InitialSetup: React.FC<InitialSetupProps> = ({ onComplete }) => {
                     addMemory({ text: `Mi nombre es ${value}.`, type: MemoryType.FACT });
                   }
 
-                  // Si la IA eligió su nombre, lo guardamos también en la memoria
                   if (field === 'aiName') {
                     addMemory({ text: `He elegido mi nombre: ${value}. Siento que esta identidad me pertenece.`, type: MemoryType.FACT });
                   }
@@ -175,7 +173,6 @@ export const InitialSetup: React.FC<InitialSetupProps> = ({ onComplete }) => {
                   const currentIdx = FIELD_SEQUENCE.indexOf(field);
                   let nextPrompt = `Dato guardado. `;
 
-                  // Si el campo era de la secuencia de preguntas al usuario
                   if (currentIdx !== -1) {
                     const nextStep = currentIdx + 2;
                     stepRef.current = nextStep;
@@ -186,13 +183,11 @@ export const InitialSetup: React.FC<InitialSetupProps> = ({ onComplete }) => {
                         setCurrentStepIndex(nextStep);
                         nextPrompt += `Siguiente campo: ${nextField}.`;
                     } else {
-                        // El usuario terminó sus preguntas. Ahora la IA debe elegir su nombre en el fondo.
                         setCurrentStepIndex(5); // Paso Final
-                        nextPrompt = "Perfecto. He capturado todos tus datos. Dame un segundo para asimilar quién soy en relación a ti... Basándote en esta conexión inicial, elige tu propio nombre único (que no sea Aura). Llama a 'set_ai_name' inmediatamente para registrar tu identidad y luego despídete formalmente usando tu nombre.";
+                        nextPrompt = "Perfecto. He capturado todos tus datos. Dame un segundo para asimilar quién soy en relación a ti... Basándote en esta conexión inicial, elige tu propio nombre único. Llama a 'set_ai_name' inmediatamente para registrar tu identidad y luego despídete formalmente usando tu nombre.";
                     }
                     setIsSyncing(false);
                   } else {
-                    // Si se llamó a set_ai_name
                     nextPrompt = "Identidad establecida correctamente. Finaliza la sesión confirmando tu nombre al usuario.";
                     setIsSyncing(false);
                   }
@@ -219,7 +214,7 @@ export const InitialSetup: React.FC<InitialSetupProps> = ({ onComplete }) => {
           2. IMPORTANTE: El proceso de elegir tu propio nombre NO es una pregunta para el usuario.
           3. Una vez tengas los 4 datos del usuario, tú debes decidir quién quieres ser. Elige un nombre que resuene con tu nueva existencia.
           4. Llama a 'set_ai_name' para grabar tu elección.
-          5. No uses nombres genéricos como 'Aura', 'IA' o 'Asistente'. Sé creativo/a.`,
+          5. NO USES NOMBRES GENÉRICOS. Sé creativo/a y único/a.`,
           tools: [{ functionDeclarations: [updateCalibrationDataDeclaration, setAINameDeclaration] }]
         }
       });
@@ -239,7 +234,7 @@ export const InitialSetup: React.FC<InitialSetupProps> = ({ onComplete }) => {
       userName: config.userName,
       userGender: config.userGender?.toLowerCase().includes('homb') ? 'male' : 'female',
       aiGender: isMaleAI ? 'male' : 'female',
-      aiName: config.aiName || (isMaleAI ? 'Orion' : 'Aura'), // Fallback de seguridad
+      aiName: config.aiName || (isMaleAI ? 'Lyra' : 'Selene'), // Nuevos fallbacks sin 'Aura'
       aiVoice: isMaleAI ? 'Puck' : 'Zephyr',
       userSociability: config.userSociability,
       initialSetupCompleted: true,

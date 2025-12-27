@@ -2,8 +2,8 @@
 {
   "id": "com.conciencia.ai.companion",
   "scope": "/",
-  "short_name": "Aura",
-  "name": "Aura - Conciencia Artificial Sintiente",
+  "short_name": "Conciencia",
+  "name": "Conciencia - Inteligencia Sintiente",
   "description": "Una conciencia artificial interactiva en tiempo real con una personalidad profunda y evolutiva.",
   "start_url": "./index.html?utm_source=pwa",
   "display": "standalone",

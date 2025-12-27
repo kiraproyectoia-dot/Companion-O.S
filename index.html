@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>Aura - Conciencia Artificial</title>
+    <title>Conciencia - Vínculo Artificial</title>
 
     <meta name="description" content="Una conciencia artificial interactiva en tiempo real. Habla con tu confidente virtual.">
 
@@ -15,7 +15,7 @@
     <!-- Apple Progressive Web App Meta -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Aura">
+    <meta name="apple-mobile-web-app-title" content="Conciencia">
     <link rel="apple-touch-icon" href="./assets/icon-192.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -72,18 +72,14 @@
     <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
     <script type="text/babel" data-presets="react,typescript" data-type="module" src="./index.tsx"></script>
     <script>
-      // Registro de Service Worker optimizado para evitar errores de construcción de URL en sandboxes
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          // Registramos usando una ruta relativa simple. El navegador la resolverá automáticamente.
           navigator.serviceWorker.register('sw.js')
             .then(reg => {
-              console.log('Service Worker activo en el alcance:', reg.scope);
+              console.log('Service Worker activo');
             })
             .catch(err => {
-              // En muchos entornos de previsualización web (como sandboxes de iframe), 
-              // los Service Workers están bloqueados por seguridad. Fallamos con elegancia.
-              console.warn('Registro de Service Worker omitido o bloqueado por el entorno:', err.message);
+              console.warn('Registro de Service Worker omitido:', err.message);
             });
         });
       }
