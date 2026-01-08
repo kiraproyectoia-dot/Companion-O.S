@@ -4,9 +4,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>Conciencia - Vínculo Artificial</title>
+    <title>Compañero Artificial</title>
 
-    <meta name="description" content="Una conciencia artificial interactiva en tiempo real. Habla con tu confidente virtual.">
+    <meta name="description" content="Un compañero real con el que puedes hablar, compartir y charlar de forma fluida.">
 
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#000000" />
@@ -15,7 +15,7 @@
     <!-- Apple Progressive Web App Meta -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Conciencia">
+    <meta name="apple-mobile-web-app-title" content="Compañero">
     <link rel="apple-touch-icon" href="./assets/icon-192.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -60,29 +60,11 @@
     user-select: text;
     -webkit-user-select: text;
   }
-  @keyframes glow {
-    0%, 100% { box-shadow: 0 0 5px rgba(129, 140, 248, 0.3); }
-    50% { box-shadow: 0 0 15px rgba(129, 140, 248, 0.6); }
-  }
-  .animate-glow { animation: glow 4s ease-in-out infinite; }
 </style>
 </head>
   <body>
     <div id="root"></div>
     <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
     <script type="text/babel" data-presets="react,typescript" data-type="module" src="./index.tsx"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js')
-            .then(reg => {
-              console.log('Service Worker activo');
-            })
-            .catch(err => {
-              console.warn('Registro de Service Worker omitido:', err.message);
-            });
-        });
-      }
-    </script>
   </body>
 </html>

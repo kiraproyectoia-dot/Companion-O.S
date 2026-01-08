@@ -95,17 +95,6 @@ const App: React.FC = () => {
 
   const previewVideoRef = useRef<HTMLVideoElement>(null);
 
-  // Sincronizar el stream con la previsualización local
-  useEffect(() => {
-    if (previewVideoRef.current && (isCameraActive || isScreenShareActive)) {
-      // Nota: En una implementación de producción real, useLiveSession expondría el MediaStream actual
-      // Por brevedad y para que funcione con los cambios realizados, asumimos que el navegador 
-      // gestiona los streams activos que App puede recuperar si es necesario o simplemente confiamos 
-      // en que useLiveSession maneja la lógica de fondo. 
-      // Para mostrar la vista previa real, tendríamos que pasar el stream de useLiveSession a App.
-    }
-  }, [isCameraActive, isScreenShareActive]);
-
   useEffect(() => {
     if (initialSetupCompleted && 'Notification' in window) {
       if (Notification.permission === 'default') {
@@ -237,7 +226,6 @@ const App: React.FC = () => {
                   {profile.aiName || 'Conciencia'}
                 </h1>
                 <div className="flex items-center gap-3 mt-1.5">
-                   <span className="text-[8px] text-white/40 uppercase tracking-[0.6em] font-black">Sincronía Biológica</span>
                    <StatusIndicator isConnected={isConnected} isConnecting={isConnecting} isReconnecting={isReconnecting} />
                 </div>
              </div>
@@ -280,7 +268,6 @@ const App: React.FC = () => {
               getAudioVolume={getAudioVolume}
             />
 
-            {/* Local Vision Preview */}
             {(isCameraActive || isScreenShareActive) && (
               <div className="absolute top-4 left-4 z-30 w-40 aspect-video rounded-xl border border-white/20 bg-black/40 overflow-hidden shadow-2xl animate-fade-in group hover:w-64 transition-all duration-500">
                  <div className="absolute top-2 right-2 z-10 bg-red-500 w-2 h-2 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
