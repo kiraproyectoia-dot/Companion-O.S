@@ -1,14 +1,15 @@
-
 import React, { Suspense, useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame, ThreeElements } from '@react-three/fiber';
 import { AnimationMixer, AnimationAction, LoopOnce, Bone, SkinnedMesh, Vector2, Euler, MathUtils } from 'three';
 import { useGLTF, OrbitControls } from '@react-three/drei';
 
-// Fix para JSX element type errors using ThreeElements from @react-three/fiber
+// FIX: Added JSX declarations for Three.js components to resolve compilation errors
 declare global {
   namespace JSX {
-    interface IntrinsicElements extends ThreeElements {
+    interface IntrinsicElements {
       primitive: any;
+      ambientLight: any;
+      directionalLight: any;
     }
   }
 }
@@ -349,14 +350,12 @@ const AvatarModel: React.FC<ModelProps> = ({ modelUrl, isSpeaking, currentGestur
     }
   });
 
-  // Fix: The primitive tag is now correctly typed via JSX augmentation including ThreeElements
   return <primitive object={scene} position={[0, -1.6, 0]} />;
 };
 
 export const Avatar: React.FC<ModelProps> = ({ modelUrl, isSpeaking, currentGesture, currentEmotion, getAudioVolume }) => {
   return (
     <Canvas camera={{ position: [0, 0, 1.1], fov: 45 }} shadows className="w-full h-full">
-      {/* Fix: ambientLight and directionalLight are now correctly typed via JSX augmentation including ThreeElements */}
       <ambientLight intensity={1.5} />
       <directionalLight position={[2, 4, 4]} intensity={2.0} castShadow={true} />
       <Suspense fallback={null}>

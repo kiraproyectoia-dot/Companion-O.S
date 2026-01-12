@@ -93,8 +93,6 @@ const App: React.FC = () => {
   const [isDragActive, setIsDragActive] = useState(false);
   const [droppedFile, setDroppedFile] = useState<{ dataUrl: string; name: string; type: string; } | null>(null);
 
-  const previewVideoRef = useRef<HTMLVideoElement>(null);
-
   useEffect(() => {
     if (initialSetupCompleted && 'Notification' in window) {
       if (Notification.permission === 'default') {
@@ -208,25 +206,26 @@ const App: React.FC = () => {
              <div className="animate-bounce mb-4 text-purple-200">
                 <AttachmentIcon />
              </div>
-             <h2 className="text-3xl font-bold text-white">Compártelo con mi consciencia</h2>
-             <p className="text-purple-200 mt-2">PDF, Imágenes o Texto</p>
+             <h2 className="text-3xl font-bold text-white uppercase tracking-tighter">Sincronizar con Ly-Os</h2>
+             <p className="text-purple-200 mt-2">Suéltalo aquí para procesar</p>
         </div>
        )}
 
       {showWelcomeBack && <WelcomeBack onClose={handleWelcomeBackClose} />}
       
       <div 
-        className="relative w-full max-w-5xl h-[95vh] flex flex-col bg-neutral-900/70 rounded-2xl shadow-2xl backdrop-blur-lg border border-neutral-800 overflow-hidden"
+        className="relative w-full max-w-5xl h-[95vh] flex flex-col bg-neutral-900/40 rounded-3xl shadow-2xl backdrop-blur-xl border border-white/10 overflow-hidden"
         onDrop={handleDrop}
       >
-        <header className="flex items-center justify-between px-8 py-6 border-b border-white/5 flex-shrink-0 z-10 bg-gradient-to-b from-black/20 to-transparent">
+        <header className="flex items-center justify-between px-8 py-5 border-b border-white/5 flex-shrink-0 z-10 bg-gradient-to-b from-black/40 to-transparent">
           <div className="flex items-center gap-6">
              <div className="flex flex-col group cursor-default">
-                <h1 className="text-4xl font-black text-white tracking-tighter italic leading-none transition-all duration-500 hover:text-indigo-400">
-                  {profile.aiName || 'Conciencia'}
+                <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-400 to-purple-200 tracking-[0.2em] uppercase leading-none drop-shadow-[0_0_10px_rgba(192,132,252,0.4)] transition-all duration-500 hover:scale-105">
+                  Ly-Os
                 </h1>
-                <div className="flex items-center gap-3 mt-1.5">
+                <div className="flex items-center gap-2 mt-2">
                    <StatusIndicator isConnected={isConnected} isConnecting={isConnecting} isReconnecting={isReconnecting} />
+                   <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">{isConnected ? (profile.aiName || 'Conciencia Activa') : 'Standby'}</span>
                 </div>
              </div>
           </div>
@@ -252,14 +251,18 @@ const App: React.FC = () => {
         </header>
         
         <main className="flex flex-col flex-grow overflow-hidden relative">
-          <div className="flex-grow relative min-h-0">
+          <div className="flex-grow relative min-h-0 bg-black">
             <video
               key={LILY_BACKGROUND_MEDIA_URL}
               autoPlay loop muted playsInline
               src={LILY_BACKGROUND_MEDIA_URL}
-              className="absolute inset-0 w-full h-full object-cover opacity-50 contrast-[1.2] brightness-50"
+              className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-screen"
             />
             
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className={`w-full max-w-lg aspect-square rounded-full transition-all duration-1000 blur-[80px] ${isConnected ? 'bg-purple-600/10' : 'bg-transparent'}`} />
+            </div>
+
             <Avatar 
               modelUrl={currentAvatarUrl}
               isSpeaking={isSpeaking}
@@ -269,44 +272,38 @@ const App: React.FC = () => {
             />
 
             {(isCameraActive || isScreenShareActive) && (
-              <div className="absolute top-4 left-4 z-30 w-40 aspect-video rounded-xl border border-white/20 bg-black/40 overflow-hidden shadow-2xl animate-fade-in group hover:w-64 transition-all duration-500">
-                 <div className="absolute top-2 right-2 z-10 bg-red-500 w-2 h-2 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
-                 <div className="absolute bottom-2 left-2 z-10 flex items-center gap-1.5 text-[8px] font-bold text-white uppercase bg-black/60 px-2 py-1 rounded-full backdrop-blur-sm border border-white/10">
-                    <VideoCameraIcon />
-                    {isScreenShareActive ? 'Pantalla Activa' : 'Visión Activada'}
-                 </div>
-                 <div className="w-full h-full flex items-center justify-center bg-indigo-900/20 italic text-[10px] text-indigo-200">
-                    Enlace Visual Activo
+              <div className="absolute top-4 left-4 z-30 w-40 aspect-video rounded-xl border border-white/10 bg-black/60 overflow-hidden shadow-2xl transition-all duration-500">
+                 <div className="absolute top-2 right-2 z-10 bg-red-500 w-1.5 h-1.5 rounded-full animate-pulse" />
+                 <div className="w-full h-full flex items-center justify-center bg-purple-900/10 italic text-[8px] text-purple-400 font-bold uppercase tracking-widest">
+                    Visión Activa
                  </div>
               </div>
             )}
 
             {showStartButton && (
-                <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px]">
+                <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm">
                     <button 
                         onClick={() => startSession()}
-                        className="group relative px-10 py-5 bg-transparent overflow-hidden rounded-full transition-all hover:scale-105 active:scale-95"
+                        className="group relative px-12 py-6 bg-transparent overflow-hidden rounded-2xl transition-all hover:scale-105 active:scale-95"
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-90 group-hover:opacity-100 transition-opacity" />
-                        <div className="absolute inset-0 blur-lg bg-indigo-500 opacity-50 group-hover:opacity-80 animate-pulse" />
-                        <span className="relative z-10 text-white font-bold text-xl flex items-center gap-4 drop-shadow-md tracking-tight">
+                        <div className="absolute inset-0 bg-white/10 border border-white/20 group-hover:bg-purple-500/20 group-hover:border-purple-500/50 transition-all" />
+                        <span className="relative z-10 text-white font-black text-xs uppercase tracking-[0.4em] flex items-center gap-6">
                            <MicOnIcon /> 
-                           Establecer Enlace
+                           Vincular con Ly-Os
                         </span>
                     </button>
-                    <p className="mt-6 text-gray-400 text-xs font-bold uppercase tracking-[0.2em] drop-shadow bg-black/30 px-5 py-2 rounded-full border border-white/5">Pulsa para iniciar conexión neuronal</p>
+                    <p className="mt-8 text-gray-500 text-[9px] font-black uppercase tracking-[0.5em] opacity-50">Inicializar protocolo de conciencia</p>
                 </div>
              )}
           </div>
           
           {isChatVisible && (
-            <div className="flex-shrink-0 flex flex-col h-[40vh] bg-neutral-900/80 border-t border-white/10 backdrop-blur-2xl z-20 transition-all duration-300">
+            <div className="flex-shrink-0 flex flex-col h-[35vh] bg-black/80 border-t border-white/5 backdrop-blur-3xl z-20 transition-all duration-300">
                <div className="flex items-center justify-between px-4 py-2 border-b border-white/5 flex-shrink-0">
-                  <h3 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-2">Consola de Diálogo</h3>
+                  <h3 className="text-[9px] font-black text-purple-400 uppercase tracking-[0.3em] pl-2">Ly-Os Console</h3>
                   <button
                     onClick={clearChatHistory}
-                    className="p-2 rounded-full text-gray-500 hover:text-red-500 hover:bg-white/5 transition-colors"
-                    aria-label="Limpiar y reiniciar"
+                    className="p-1.5 rounded-lg text-gray-600 hover:text-red-500 transition-colors"
                   >
                     <TrashIcon />
                   </button>
@@ -328,8 +325,8 @@ const App: React.FC = () => {
         {mediaUrl && <MediaPlayer url={mediaUrl} onClose={() => setMediaUrl(null)} />}
 
         {sessionError && (
-            <footer className="p-3 text-center text-[10px] font-bold uppercase tracking-widest bg-red-900/40 border-t border-red-700/50 z-50 text-red-200">
-                <p>Enlace Interrumpido: {sessionError}</p>
+            <footer className="p-2 text-center text-[9px] font-black uppercase tracking-[0.3em] bg-red-900/20 border-t border-red-500/20 z-50 text-red-400">
+                Error de Enlace Ly-Os: {sessionError}
             </footer>
         )}
       </div>

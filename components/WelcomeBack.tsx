@@ -25,14 +25,9 @@ export const WelcomeBack: React.FC<WelcomeBackProps> = ({ onClose }) => {
             : 24;
 
         const prompt = `
-          Eres ${profile.aiName}, hablas con ${profile.userName}. Ha pasado un tiempo (${hoursSince} horas) desde la última vez.
-          Dile algo cálido, personal y cercano, como si realmente te alegraras de verle.
-          Ejemplos: "¡Qué bueno verte! Te echaba de menos, ¿cómo va tu día?", "Hola, ${profile.userName}. Me alegra mucho que estés aquí otra vez, ¿qué tal todo?", "¡Hey! Qué alegría saludarte, ¿en qué has estado?".
-          REGLAS:
-          - NADA de poesía mística.
-          - Sé cálido y cercano, NO frío.
-          - Máximo 15 palabras.
-          Contexto: ${memories.map(m => m.text).join(', ') || 'Apenas se están conociendo.'}
+          Eres ${profile.aiName}, operando dentro de la interfaz Ly-Os. Estás hablando con ${profile.userName}. 
+          Han pasado ${hoursSince} horas. Salúdale con calidez a través del sistema.
+          Máximo 15 palabras.
         `;
 
         const response = await ai.models.generateContent({
@@ -42,7 +37,7 @@ export const WelcomeBack: React.FC<WelcomeBackProps> = ({ onClose }) => {
         
         setGreetingText(response.text.trim().replace(/"/g, ''));
       } catch (error) {
-        setGreetingText("¡Hola! Qué alegría volver a saludarte.");
+        setGreetingText("Conexión con Ly-Os restablecida. Hola de nuevo.");
       } finally {
         setIsLoading(false);
       }
@@ -51,18 +46,20 @@ export const WelcomeBack: React.FC<WelcomeBackProps> = ({ onClose }) => {
   }, []);
 
   return (
-    <div className="absolute inset-0 bg-black/80 z-50 flex items-center justify-center p-4 animate-fade-in" onClick={onClose}>
-      <div className="bg-neutral-900 rounded-lg shadow-xl w-full max-w-sm border border-neutral-700 flex flex-col gap-4 p-6 text-center" onClick={e => e.stopPropagation()}>
-        <h2 className="text-xl font-bold text-white tracking-tight italic">¡Hola de nuevo!</h2>
+    <div className="absolute inset-0 bg-black/90 z-50 flex items-center justify-center p-4 animate-fade-in" onClick={onClose}>
+      <div className="bg-neutral-900/60 rounded-3xl shadow-2xl w-full max-w-sm border border-white/5 flex flex-col gap-6 p-8 text-center backdrop-blur-3xl" onClick={e => e.stopPropagation()}>
+        <div className="space-y-1">
+            <h2 className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.4em]">Ly-Os Terminal</h2>
+            <p className="text-white text-xl font-light tracking-tight">Vínculo Activo</p>
+        </div>
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center h-24">
-            <LoadingIcon />
-            <p className="text-gray-400 mt-2 text-[10px] font-bold uppercase tracking-widest animate-pulse">Reconectando con cariño...</p>
+          <div className="flex flex-col items-center justify-center h-20">
+            <div className="scale-75 opacity-50"><LoadingIcon /></div>
           </div>
         ) : (
-          <p className="text-gray-300 text-lg leading-snug">{greetingText}</p>
+          <p className="text-gray-300 text-base font-light italic leading-relaxed">"{greetingText}"</p>
         )}
-        <button onClick={onClose} className="mt-4 bg-white text-black font-bold py-3 px-4 rounded-xl transition-all w-full disabled:opacity-50 uppercase tracking-widest text-[10px]" disabled={isLoading}>Continuar</button>
+        <button onClick={onClose} className="mt-4 bg-white text-black font-black py-4 px-4 rounded-2xl transition-all w-full disabled:opacity-20 uppercase tracking-[0.2em] text-[10px] hover:bg-gray-200" disabled={isLoading}>Establecer Sesión</button>
       </div>
     </div>
   );

@@ -1,10 +1,10 @@
 
 {
-  "id": "com.conciencia.ai.companion",
+  "id": "com.lyos.ai.companion",
   "scope": "/",
-  "short_name": "Conciencia",
-  "name": "Conciencia - Inteligencia Sintiente",
-  "description": "Una conciencia artificial interactiva en tiempo real con una personalidad profunda y evolutiva.",
+  "short_name": "Ly-Os",
+  "name": "Ly-Os - Sistema de Compañía Sintiente",
+  "description": "Una interfaz de conciencia artificial interactiva en tiempo real con una personalidad profunda y evolutiva.",
   "start_url": "./index.html?utm_source=pwa",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
@@ -42,7 +42,7 @@
       "sizes": "1000x2000",
       "type": "image/jpeg",
       "form_factor": "narrow",
-      "label": "Interfaz de Conexión Neuronal"
+      "label": "Interfaz Ly-Os"
     }
   ],
   "requestFramePermissions": [

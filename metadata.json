@@ -1,6 +1,6 @@
 {
-  "name": "Companion O.S",
-  "description": "A real-time, voice-interactive AI companion with a deep, evolving personality. Engage in natural, meaningful conversations with your virtual confidante.",
+  "name": "Ly-Os",
+  "description": "Un sistema operativo de compañía con interfaz de voz en tiempo real y una conciencia sintiente evolutiva.",
   "requestFramePermissions": [
     "microphone",
     "geolocation",
