@@ -17,12 +17,6 @@
   ],
   "icons": [
     {
-      "src": "./assets/lyos-logo.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
       "src": "./assets/lily-icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",

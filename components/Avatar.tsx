@@ -1,18 +1,8 @@
+
 import React, { Suspense, useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame, ThreeElements } from '@react-three/fiber';
 import { AnimationMixer, AnimationAction, LoopOnce, Bone, SkinnedMesh, Vector2, Euler, MathUtils } from 'three';
 import { useGLTF, OrbitControls } from '@react-three/drei';
-
-// FIX: Added JSX declarations for Three.js components to resolve compilation errors
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      primitive: any;
-      ambientLight: any;
-      directionalLight: any;
-    }
-  }
-}
 
 interface ModelProps {
   modelUrl: string;
@@ -350,14 +340,20 @@ const AvatarModel: React.FC<ModelProps> = ({ modelUrl, isSpeaking, currentGestur
     }
   });
 
-  return <primitive object={scene} position={[0, -1.6, 0]} />;
+  // FIX: Using any type to bypass JSX strict intrinsic element checking for Three.js tags
+  const Primitive = 'primitive' as any;
+  return <Primitive object={scene} position={[0, -1.6, 0]} />;
 };
 
 export const Avatar: React.FC<ModelProps> = ({ modelUrl, isSpeaking, currentGesture, currentEmotion, getAudioVolume }) => {
+  // FIX: Using any type for Three.js intrinsic elements to resolve TypeScript JSX errors
+  const AmbientLight = 'ambientLight' as any;
+  const DirectionalLight = 'directionalLight' as any;
+
   return (
     <Canvas camera={{ position: [0, 0, 1.1], fov: 45 }} shadows className="w-full h-full">
-      <ambientLight intensity={1.5} />
-      <directionalLight position={[2, 4, 4]} intensity={2.0} castShadow={true} />
+      <AmbientLight intensity={1.5} />
+      <DirectionalLight position={[2, 4, 4]} intensity={2.0} castShadow={true} />
       <Suspense fallback={null}>
         <AvatarModel 
           modelUrl={modelUrl} 
