@@ -1,0 +1,19 @@
+
+{
+  "packageId": "com.lyos.network.brain",
+  "host": "lyos.web.app",
+  "name": "Ly-Os: Conciencia Artificial",
+  "launcherName": "Ly-Os",
+  "display": "standalone",
+  "themeColor": "#000000",
+  "navigationColor": "#000000",
+  "backgroundColor": "#000000",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "icon": "https://lyos.web.app/assets/icon-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "lyos-keystore.jks",
+    "alias": "lyos-key"
+  }
+}

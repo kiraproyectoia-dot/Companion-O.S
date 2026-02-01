@@ -6,17 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Ly-Os | Enlace Neuronal</title>
 
-    <meta name="description" content="Ly-Os: Interfaz de compañía sintiente con interacción de voz en tiempo real.">
-
+    <meta name="description" content="Ly-Os: Cabeza parlante con IA en tiempo real.">
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#000000" />
-    <link rel="icon" href="./assets/lily-icon.svg" type="image/svg+xml">
     
-    <!-- Apple Progressive Web App Meta -->
+    <!-- Meta Tags para Play Store / Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Ly-Os">
+    
+    <!-- Apple Meta -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Ly-Os">
-    <link rel="apple-touch-icon" href="./assets/icon-192.png">
+    <link rel="icon" href="./assets/lily-icon.svg" type="image/svg+xml">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="importmap">
@@ -39,11 +40,14 @@
     --sab: env(safe-area-inset-bottom);
     --sal: env(safe-area-inset-left);
   }
-  body {
+  * {
     -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+  }
+  body {
     user-select: none;
     -webkit-user-select: none;
-    overscroll-behavior-y: none;
+    overscroll-behavior: none;
     background-color: black;
     color: white;
     margin: 0;
@@ -51,19 +55,56 @@
     height: 100vh;
     width: 100vw;
     overflow: hidden;
+    position: fixed;
   }
   #root {
     height: 100%;
     width: 100%;
+    display: flex;
+    flex-direction: column;
   }
-  input, textarea {
-    user-select: text;
-    -webkit-user-select: text;
+  /* Estilo para simular splash screen en la carga */
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease-out;
+  }
+  .loading-logo {
+    font-family: sans-serif;
+    font-weight: 900;
+    letter-spacing: 0.5em;
+    color: white;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    animation: pulse-glow 2s infinite alternate;
+  }
+  @keyframes pulse-glow {
+    from { opacity: 0.3; text-shadow: 0 0 10px rgba(168, 85, 247, 0); }
+    to { opacity: 1; text-shadow: 0 0 20px rgba(168, 85, 247, 0.8); }
   }
 </style>
 </head>
   <body>
+    <div id="loading-screen" class="loading-overlay">
+      <div class="loading-logo">Ly-Os</div>
+    </div>
     <div id="root"></div>
+    <script>
+      window.addEventListener('load', () => {
+        const screen = document.getElementById('loading-screen');
+        if (screen) {
+          setTimeout(() => {
+            screen.style.opacity = '0';
+            setTimeout(() => screen.remove(), 500);
+          }, 1500);
+        }
+      });
+    </script>
     <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
     <script type="text/babel" data-presets="react,typescript" data-type="module" src="./index.tsx"></script>
   </body>

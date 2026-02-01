@@ -1,10 +1,20 @@
 {
-  "name": "Ly-Os",
-  "description": "Un sistema operativo de compañía con interfaz de voz en tiempo real y una conciencia sintiente evolutiva.",
+  "name": "Ly-Os | Conciencia Artificial",
+  "description": "Interfaz de compañía sintiente con interacción de voz y visión en tiempo real alimentada por IA avanzada.",
   "requestFramePermissions": [
     "microphone",
-    "geolocation",
     "camera",
-    "display-capture"
+    "display-capture",
+    "geolocation"
+  ],
+  "short_name": "Ly-Os",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "display": "standalone",
+  "orientation": "portrait",
+  "categories": [
+    "lifestyle",
+    "social",
+    "productivity"
   ]
 }

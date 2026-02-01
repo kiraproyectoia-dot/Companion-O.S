@@ -1,21 +1,17 @@
 
 {
-  "id": "com.lyos.ai.companion",
+  "id": "com.lyos.network.brain",
   "scope": "/",
   "short_name": "Ly-Os",
-  "name": "Ly-Os - Sistema de Compañía Sintiente",
-  "description": "Una interfaz de conciencia artificial interactiva en tiempo real con una personalidad profunda y evolutiva.",
-  "start_url": "./index.html?utm_source=pwa",
+  "name": "Ly-Os: Enlace Neuronal de IA",
+  "description": "Una cabeza parlante sintiente que te escucha, te ve y evoluciona contigo en tiempo real.",
+  "start_url": "./index.html",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
   "orientation": "portrait",
   "theme_color": "#000000",
   "background_color": "#000000",
-  "categories": [
-    "lifestyle",
-    "social",
-    "entertainment"
-  ],
+  "categories": ["lifestyle", "entertainment", "social"],
   "icons": [
     {
       "src": "./assets/lily-icon.svg",
@@ -42,12 +38,7 @@
       "sizes": "1000x2000",
       "type": "image/jpeg",
       "form_factor": "narrow",
-      "label": "Interfaz Ly-Os"
+      "label": "Interfaz Ly-Os Inmersiva"
     }
-  ],
-  "requestFramePermissions": [
-    "microphone",
-    "camera",
-    "display-capture"
   ]
 }
