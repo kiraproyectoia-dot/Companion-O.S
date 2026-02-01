@@ -1,20 +1,10 @@
 {
-  "name": "Ly-Os | Conciencia Artificial",
-  "description": "Interfaz de compañía sintiente con interacción de voz y visión en tiempo real alimentada por IA avanzada.",
+  "name": "Ly-Os",
+  "description": "Sistema operativo personalizado",
   "requestFramePermissions": [
     "microphone",
+    "geolocation",
     "camera",
-    "display-capture",
-    "geolocation"
-  ],
-  "short_name": "Ly-Os",
-  "theme_color": "#000000",
-  "background_color": "#000000",
-  "display": "standalone",
-  "orientation": "portrait",
-  "categories": [
-    "lifestyle",
-    "social",
-    "productivity"
+    "display-capture"
   ]
 }
