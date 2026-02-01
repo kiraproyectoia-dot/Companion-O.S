@@ -72,6 +72,7 @@ export const useLiveSession = () => {
   const [currentEmotion, setCurrentEmotion] = useState('neutral');
   const [isCameraActive, setIsCameraActive] = useState(false);
   const [isScreenShareActive, setIsScreenShareActive] = useState(false);
+  const [cameraFacingMode, setCameraFacingMode] = useState<'user' | 'environment'>('user');
   const [error, setError] = useState<string | null>(null);
   const [transcripts, setTranscripts] = useState<TranscriptEntry[]>(getHistory());
 
@@ -217,7 +218,7 @@ export const useLiveSession = () => {
     
     // --- PERSISTENCIA DE MEMORIA ---
     const memories = getMemories();
-    const history = getHistory().slice(-15); // Recuperamos los últimos 15 mensajes del historial persistente
+    const history = getHistory().slice(-15); 
 
     const memoryContext = memories.length > 0 
         ? `\n\n[MEMORIA CRÍTICA DE LARGO PLAZO]\nEstos son los datos que has guardado en tu diario y nunca debes olvidar:\n${memories.map(m => `- ${m.text}`).join('\n')}`
@@ -296,7 +297,6 @@ export const useLiveSession = () => {
             silentGain.connect(inCtx.destination);
 
             sessionPromiseRef.current?.then(session => {
-              // Notificar al sistema que el enlace ha vuelto
               session.sendRealtimeInput({ text: "SISTEMA LY-OS: Enlace neuronal re-establecido. Sincronizando con memorias previas. Continúa tu existencia desde donde la dejaste." });
             });
           },
@@ -460,7 +460,9 @@ export const useLiveSession = () => {
     } else {
       try {
         stopVideoStream();
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: cameraFacingMode } 
+        });
         videoStreamRef.current = stream;
         setIsCameraActive(true);
         startFrameStreaming();
@@ -469,7 +471,30 @@ export const useLiveSession = () => {
         setError("Cámara no disponible.");
       }
     }
-  }, [isCameraActive, stopVideoStream]);
+  }, [isCameraActive, stopVideoStream, cameraFacingMode]);
+
+  const switchCamera = useCallback(async () => {
+    const nextMode = cameraFacingMode === 'user' ? 'environment' : 'user';
+    setCameraFacingMode(nextMode);
+    vibrate(15);
+    
+    if (isCameraActive) {
+      stopVideoStream();
+      // Pequeño delay para asegurar que el track anterior se detuvo
+      setTimeout(async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: nextMode } 
+          });
+          videoStreamRef.current = stream;
+          setIsCameraActive(true);
+          startFrameStreaming();
+        } catch (e) {
+          console.error("No se pudo cambiar de cámara", e);
+        }
+      }, 300);
+    }
+  }, [cameraFacingMode, isCameraActive, stopVideoStream, vibrate]);
 
   const toggleScreenShare = useCallback(async () => {
     if (isScreenShareActive) {
@@ -542,8 +567,8 @@ export const useLiveSession = () => {
 
   return {
     isConnected, isConnecting, isReconnecting, isMuted, isSpeaking, isReplying, isPaused,
-    currentGesture, currentEmotion, isCameraActive, isScreenShareActive,
-    startSession, hardCloseSession, togglePause, toggleMute, toggleCamera, toggleScreenShare,
+    currentGesture, currentEmotion, isCameraActive, isScreenShareActive, cameraFacingMode,
+    startSession, hardCloseSession, togglePause, toggleMute, toggleCamera, switchCamera, toggleScreenShare,
     error, transcripts, sendTextMessage, clearChatHistory, getAudioVolume,
     saveImageMemory: useCallback(() => {}, [])
   };

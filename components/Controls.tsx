@@ -1,6 +1,19 @@
 
 import React from 'react';
-import { MicOnIcon, MicOffIcon, LoadingIcon, ChatIcon, JournalIcon, PauseIcon, PlayIcon, VideoCameraIcon, VideoCameraOffIcon, DesktopComputerIcon, StopScreenShareIcon } from '../constants';
+import { 
+    MicOnIcon, 
+    MicOffIcon, 
+    LoadingIcon, 
+    ChatIcon, 
+    JournalIcon, 
+    PauseIcon, 
+    PlayIcon, 
+    VideoCameraIcon, 
+    VideoCameraOffIcon, 
+    SwitchCameraIcon,
+    DesktopComputerIcon, 
+    StopScreenShareIcon 
+} from '../constants';
 
 interface ControlsProps {
   isConnected: boolean;
@@ -19,6 +32,7 @@ interface ControlsProps {
   onChatToggle: () => void;
   onMemoryJournalToggle: () => void;
   onCameraToggle: () => void;
+  onSwitchCamera: () => void;
   onScreenShareToggle: () => void;
 }
 
@@ -27,7 +41,6 @@ export const Controls: React.FC<ControlsProps> = ({
   isConnecting,
   isMuted,
   isPaused,
-  isListening,
   isChatVisible,
   isMemoryJournalVisible,
   isCameraActive,
@@ -37,6 +50,7 @@ export const Controls: React.FC<ControlsProps> = ({
   onChatToggle,
   onMemoryJournalToggle,
   onCameraToggle,
+  onSwitchCamera,
   onScreenShareToggle,
 }) => {
 
@@ -86,6 +100,13 @@ export const Controls: React.FC<ControlsProps> = ({
           <div className="scale-75">{isCameraActive ? <VideoCameraOffIcon /> : <VideoCameraIcon />}</div>
           <Tooltip text={isCameraActive ? "Ocultar Visión" : "Activar Visión"} />
       </button>
+
+      {isCameraActive && (
+          <button onClick={onSwitchCamera} className={getBtnClass(false)} aria-label="Cambiar Cámara">
+              <div className="scale-75"><SwitchCameraIcon /></div>
+              <Tooltip text="Girar Cámara" />
+          </button>
+      )}
 
       <button onClick={onScreenShareToggle} className={getBtnClass(isScreenShareActive)} aria-label="Compartir">
           <div className="scale-75">{isScreenShareActive ? <StopScreenShareIcon /> : <DesktopComputerIcon />}</div>

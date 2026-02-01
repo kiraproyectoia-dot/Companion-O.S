@@ -55,7 +55,6 @@ const LILY_AVATAR_URL = `https://models.readyplayer.me/68e7ada78074ade6a70196db.
 const LEO_AVATAR_URL = `https://models.readyplayer.me/6946ebf98f9c70cbc9ebd1e7.glb?${AVATAR_PARAMS}`;
 
 const App: React.FC = () => {
-  // Única fuente de verdad para el perfil
   const [profile, setProfile] = useState(() => getProfile());
   
   const {
@@ -74,6 +73,7 @@ const App: React.FC = () => {
     togglePause,
     toggleMute,
     toggleCamera,
+    switchCamera,
     toggleScreenShare,
     error: sessionError,
     transcripts,
@@ -87,12 +87,10 @@ const App: React.FC = () => {
   const [isMemoryJournalVisible, setIsMemoryJournalVisible] = useState(false);
   const [showWelcomeBack, setShowWelcomeBack] = useState(false);
   const [mediaUrl, setMediaUrl] = useState<string | null>(null);
-  const lastShownMediaUrl = useRef<string | null>(null);
   
   const [isDragActive, setIsDragActive] = useState(false);
   const [droppedFile, setDroppedFile] = useState<{ dataUrl: string; name: string; type: string; } | null>(null);
 
-  // Determinar si la configuración inicial está completa
   const initialSetupCompleted = useMemo(() => profile.initialSetupCompleted, [profile]);
 
   useEffect(() => {
@@ -110,7 +108,6 @@ const App: React.FC = () => {
     const now = Date.now();
     const TWELVE_HOURS = 12 * 60 * 60 * 1000;
     
-    // Solo mostrar el WelcomeBack si ha pasado tiempo y no estamos conectados
     if (lastVisit && now - parseInt(lastVisit, 10) > TWELVE_HOURS && !isConnected && !isConnecting) {
         setShowWelcomeBack(true);
     } 
@@ -121,7 +118,6 @@ const App: React.FC = () => {
   }, [initialSetupCompleted, isConnected, isConnecting]);
 
   const handleInitialSetupComplete = () => {
-    // Al completar, actualizamos el perfil local y el estado para renderizar el App principal
     const freshProfile = getProfile();
     setProfile(freshProfile);
   };
@@ -212,6 +208,7 @@ const App: React.FC = () => {
               onChatToggle={() => setIsChatVisible(!isChatVisible)}
               onMemoryJournalToggle={() => setIsMemoryJournalVisible(!isMemoryJournalVisible)}
               onCameraToggle={toggleCamera}
+              onSwitchCamera={switchCamera}
               onScreenShareToggle={toggleScreenShare}
           />
         </header>
