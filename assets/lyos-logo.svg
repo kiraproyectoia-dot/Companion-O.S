@@ -1,0 +1,53 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e2b697;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#b58d71;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8e6b54;stop-opacity:1" />
+    </linearGradient>
+    <filter id="soft-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  
+  <rect width="512" height="512" fill="#000000"/>
+  
+  <g transform="translate(256, 256)" filter="url(#soft-glow)">
+    <!-- Circuito Exterior -->
+    <circle r="150" stroke="url(#logo-grad)" stroke-width="6" fill="none" opacity="0.9"/>
+    
+    <!-- Líneas de Circuito Radiantes -->
+    <g stroke="url(#logo-grad)" stroke-width="3" fill="none">
+      <path d="M0 -150 V-210 M-5 -215 a5 5 0 1 1 10 0 a5 5 0 1 1 -10 0" />
+      <path d="M0 150 V210 M-5 215 a5 5 0 1 1 10 0 a5 5 0 1 1 -10 0" />
+      <path d="M150 0 H210 M215 -5 a5 5 0 1 1 0 10 a5 5 0 1 1 0 -10" />
+      <path d="M-150 0 H-210 M-215 -5 a5 5 0 1 1 0 10 a5 5 0 1 1 0 -10" />
+      
+      <!-- Diagonales -->
+      <path d="M106 -106 L150 -150 M153 -153 a5 5 0 1 1 7 7 a5 5 0 1 1 -7 -7" />
+      <path d="M-106 -106 L-150 -150 M-153 -153 a5 5 0 1 1 -7 7 a5 5 0 1 1 7 -7" />
+      <path d="M106 106 L150 150 M153 153 a5 5 0 1 1 7 -7 a5 5 0 1 1 -7 7" />
+      <path d="M-106 106 L-150 150 M-153 153 a5 5 0 1 1 -7 -7 a5 5 0 1 1 7 7" />
+
+      <!-- Líneas Secundarias Curvas -->
+      <path d="M50 -142 Q 70 -190 100 -200 M105 -205 a4 4 0 1 1 8 0 a4 4 0 1 1 -8 0" stroke-width="2" opacity="0.7"/>
+      <path d="M-50 -142 Q -70 -190 -100 -200 M-105 -205 a4 4 0 1 1 -8 0 a4 4 0 1 1 8 0" stroke-width="2" opacity="0.7"/>
+    </g>
+
+    <!-- Flor de Loto Estilizada -->
+    <g fill="url(#logo-grad)" transform="translate(0, -20)">
+      <!-- Pétalo Central -->
+      <path d="M0 -55 C-15 -55 -25 -35 -25 -15 C-25 10 0 35 0 35 C0 35 25 10 25 -15 C25 -35 15 -55 0 -55 Z" />
+      <!-- Pétalos Laterales -->
+      <path d="M-8 -12 C-35 -12 -55 10 -40 35 C-30 50 0 45 0 45 C0 45 -15 25 -8 -12 Z" opacity="0.8"/>
+      <path d="M8 -12 C35 -12 55 10 40 35 C30 50 0 45 0 45 C0 45 15 25 8 -12 Z" opacity="0.8"/>
+      <!-- Pétalos Inferiores -->
+      <path d="M-15 15 C-45 15 -65 35 -50 55 C-40 65 -5 50 -5 50 C-5 50 -15 35 -15 15 Z" opacity="0.6"/>
+      <path d="M15 15 C45 15 65 35 50 55 C40 65 5 50 5 50 C5 50 15 35 15 15 Z" opacity="0.6"/>
+    </g>
+
+    <!-- Letra L -->
+    <text y="95" fill="url(#logo-grad)" font-family="Arial, sans-serif" font-size="70" font-weight="900" text-anchor="middle" style="letter-spacing: 2px;">L</text>
+  </g>
+</svg>
