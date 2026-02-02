@@ -94,6 +94,10 @@ export const InitialSetup: React.FC<InitialSetupProps> = ({ onComplete }) => {
     cleanupSession();
     
     try {
+      // CRITICAL: Request microphone access immediately on user gesture to avoid "stale gesture" issues on mobile.
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       const inCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
       const outCtx = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
@@ -103,9 +107,6 @@ export const InitialSetup: React.FC<InitialSetupProps> = ({ onComplete }) => {
 
       await inCtx.resume();
       await outCtx.resume();
-      
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      streamRef.current = stream;
       
       const sessionPromise = ai.live.connect({
         model: 'gemini-2.5-flash-native-audio-preview-12-2025',
@@ -198,8 +199,17 @@ export const InitialSetup: React.FC<InitialSetupProps> = ({ onComplete }) => {
               }
             }
           },
-          onerror: (e) => { setError("Ly-Os Link Error"); cleanupSession(); },
-          onclose: () => cleanupSession()
+          onerror: (e) => { 
+            console.error("Session error:", e);
+            setError("Error en el enlace Ly-Os."); 
+            setIsConnecting(false);
+            cleanupSession(); 
+          },
+          onclose: () => {
+            setIsLive(false);
+            setIsConnecting(false);
+            cleanupSession();
+          }
         },
         config: {
           responseModalities: [Modality.AUDIO],
@@ -213,8 +223,13 @@ export const InitialSetup: React.FC<InitialSetupProps> = ({ onComplete }) => {
 
       sessionRef.current = await sessionPromise;
     } catch (err: any) {
+      console.error("Calibration failed:", err);
       setIsConnecting(false);
-      setError("Fallo en hardware de audio.");
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        setError("Permiso de micrófono denegado. Actívalo en los ajustes de tu navegador.");
+      } else {
+        setError("Fallo en hardware de audio o permisos.");
+      }
       cleanupSession();
     }
   };
@@ -264,11 +279,11 @@ export const InitialSetup: React.FC<InitialSetupProps> = ({ onComplete }) => {
             <div className="h-32 flex flex-col items-center justify-center gap-6">
                {error ? (
                   <div className="flex flex-col items-center gap-4">
-                    <p className="text-red-500 text-[10px] font-black uppercase tracking-widest">{error}</p>
-                    <button onClick={startCalibration} className="px-10 py-3 bg-white/5 border border-white/10 text-white text-[9px] uppercase font-black rounded-xl">Reiniciar Protocolo</button>
+                    <p className="text-red-500 text-[10px] font-black uppercase tracking-widest text-center px-4">{error}</p>
+                    <button onClick={startCalibration} className="px-10 py-3 bg-white/5 border border-white/10 text-white text-[9px] uppercase font-black rounded-xl hover:bg-white/10 transition-all">Reiniciar Protocolo</button>
                   </div>
                ) : !isLive && !isConnecting ? (
-                  <button onClick={startCalibration} className="px-14 py-5 bg-white text-black font-black rounded-2xl text-[10px] uppercase tracking-[0.4em] hover:bg-purple-50 transition-colors shadow-2xl">Inicializar Ly-Os</button>
+                  <button onClick={startCalibration} className="px-14 py-5 bg-white text-black font-black rounded-2xl text-[10px] uppercase tracking-[0.4em] hover:bg-purple-50 transition-colors shadow-2xl active:scale-95">Inicializar Ly-Os</button>
                ) : (
                   <div className="space-y-4">
                     <p className="text-purple-400 text-[9px] font-black uppercase tracking-[0.4em] animate-pulse">

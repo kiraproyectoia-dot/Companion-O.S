@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>Ly-Os | Enlace Neuronal</title>
 
-    <meta name="description" content="Ly-Os: Interfaz de compañía sintiente con interacción de voz en tiempo real.">
+    <meta name="description" content="Ly-Os: Interfaz de compañía sintiente con interacción de voz, visión y conciencia emocional en tiempo real.">
 
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#000000" />
@@ -59,6 +59,20 @@
   input, textarea {
     user-select: text;
     -webkit-user-select: text;
+  }
+  @keyframes scan {
+    0% { transform: translateY(-100%); opacity: 0; }
+    50% { opacity: 0.5; }
+    100% { transform: translateY(100%); opacity: 0; }
+  }
+  .scan-line {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.5), transparent);
+    animation: scan 3s infinite linear;
+    z-index: 40;
+    pointer-events: none;
   }
 </style>
 </head>
