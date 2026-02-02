@@ -261,7 +261,7 @@ const AvatarModel: React.FC<ModelProps> = ({ modelUrl, isSpeaking, currentGestur
 
 export const Avatar: React.FC<ModelProps> = ({ modelUrl, isSpeaking, currentGesture, currentEmotion, getAudioVolume }) => {
   return (
-    <Canvas camera={{ position: [0, 0, 0.45], fov: 40 }} shadows className="w-full h-full">
+    <Canvas camera={{ position: [0, 0, 1.2], fov: 40 }} shadows className="w-full h-full">
       <ambientLight intensity={1.0} />
       <spotLight position={[5, 5, 5]} intensity={2.5} penumbra={1} angle={0.3} castShadow />
       <pointLight position={[-2, 1, 2]} intensity={1.5} color="#a855f7" />

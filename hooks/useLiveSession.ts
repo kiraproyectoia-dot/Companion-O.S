@@ -213,8 +213,16 @@ export const useLiveSession = () => {
     setError(null);
     vibrate([50, 30, 50]); 
 
+    // CRITICAL: First check if origin is secure
+    if (!window.isSecureContext) {
+      setError("Error: Ly-Os requiere una conexión segura (HTTPS).");
+      setIsConnecting(false);
+      return;
+    }
+
     try {
-      // 1. CRITICAL: Request microphone immediately to ensure user gesture valid for permission prompt.
+      // 1. CRITICAL: Request microphone IMMEDIATELY on click event.
+      // Many mobile browsers deny access if called after multiple async/await layers.
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
 
@@ -244,6 +252,7 @@ export const useLiveSession = () => {
 
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
       
+      // Initialize Audio Contexts immediately after user gesture
       if (!audioContextInRef.current) audioContextInRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
       if (!audioContextOutRef.current) audioContextOutRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 24000 });
       
@@ -429,9 +438,9 @@ export const useLiveSession = () => {
       console.error("Failed to start Ly-Os session:", err);
       setIsConnecting(false);
       if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-        setError("Permiso de micrófono denegado.");
+        setError("Permiso denegado. Ve a Ajustes > Apps > Ly-Os > Permisos y activa el Micrófono.");
       } else {
-        setError("Fallo en hardware de audio o permisos.");
+        setError("Fallo en hardware de audio o seguridad del sitio.");
       }
       releaseWakeLock();
     }
