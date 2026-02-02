@@ -208,24 +208,24 @@ export const useLiveSession = () => {
   }, []);
 
   const startSession = async () => {
+    // 1. CRITICAL: Request microphone IMMEDIATELY on click event.
+    // In hybrid apps (Play Store TWA), the user gesture context is lost very easily.
+    let stream: MediaStream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (err: any) {
+      console.error("Session getUserMedia failed:", err);
+      setError("Permiso de micrófono denegado. Actívalo en Ajustes > Apps > Ly-Os > Permisos.");
+      return;
+    }
+
     if (isConnected || isConnecting) return;
     setIsConnecting(true);
     setError(null);
     vibrate([50, 30, 50]); 
 
-    // CRITICAL: First check if origin is secure
-    if (!window.isSecureContext) {
-      setError("Error: Ly-Os requiere una conexión segura (HTTPS).");
-      setIsConnecting(false);
-      return;
-    }
-
     try {
-      // 1. CRITICAL: Request microphone IMMEDIATELY on click event.
-      // Many mobile browsers deny access if called after multiple async/await layers.
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
-
       requestWakeLock();
       const profile = getProfile();
       
@@ -437,11 +437,7 @@ export const useLiveSession = () => {
     } catch (err: any) {
       console.error("Failed to start Ly-Os session:", err);
       setIsConnecting(false);
-      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-        setError("Permiso denegado. Ve a Ajustes > Apps > Ly-Os > Permisos y activa el Micrófono.");
-      } else {
-        setError("Fallo en hardware de audio o seguridad del sitio.");
-      }
+      setError("Fallo en hardware de audio o seguridad.");
       releaseWakeLock();
     }
   };
