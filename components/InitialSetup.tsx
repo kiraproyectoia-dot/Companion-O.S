@@ -88,23 +88,14 @@ export const InitialSetup: React.FC<InitialSetupProps> = ({ onComplete }) => {
   };
 
   const startCalibration = async () => {
-    // CRITICAL: Request microphone access as the VERY FIRST line to avoid "stale gesture" 
-    // especially in Play Store TWAs/WebViews where the gesture window is very narrow.
-    let stream: MediaStream;
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    } catch (err: any) {
-      console.error("Initial getUserMedia failed:", err);
-      setError("Permiso de micrófono denegado. Actívalo en los ajustes de tu móvil (Ajustes > Apps > Ly-Os > Permisos).");
-      return;
-    }
-
     if (isConnecting) return;
     setIsConnecting(true);
     setError(null);
     cleanupSession();
     
     try {
+      // CRITICAL: Request microphone access immediately on user gesture to avoid "stale gesture" issues on mobile.
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
 
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
@@ -234,7 +225,11 @@ export const InitialSetup: React.FC<InitialSetupProps> = ({ onComplete }) => {
     } catch (err: any) {
       console.error("Calibration failed:", err);
       setIsConnecting(false);
-      setError("Fallo en hardware de audio o seguridad.");
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        setError("Permiso de micrófono denegado. Actívalo en los ajustes de tu navegador.");
+      } else {
+        setError("Fallo en hardware de audio o permisos.");
+      }
       cleanupSession();
     }
   };
