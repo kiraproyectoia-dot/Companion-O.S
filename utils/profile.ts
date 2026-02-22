@@ -43,6 +43,13 @@ export const getProfile = (): UserProfile => {
     const stored = localStorage.getItem(PROFILE_KEY);
     if (!stored) return { ...DEFAULT_PROFILE };
     const parsed = JSON.parse(stored);
+    
+    // Migración de voz masculina de Puck a Charon para tono más neutro
+    if (parsed.aiVoice === 'Puck') {
+      parsed.aiVoice = 'Charon';
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(parsed));
+    }
+
     return { ...DEFAULT_PROFILE, ...parsed };
   } catch (e) {
     console.error("Error reading profile:", e);

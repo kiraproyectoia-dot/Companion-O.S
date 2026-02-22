@@ -85,7 +85,7 @@ export const MemoryJournal: React.FC<MemoryJournalProps> = ({ onClose }) => {
           <h2 className="text-lg font-semibold text-purple-300">Diario de Recuerdos</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-white text-2xl" aria-label="Cerrar">&times;</button>
         </header>
-        <div className="p-6 max-h-[60vh] overflow-y-auto">
+        <div className="p-6 max-h-[60dvh] overflow-y-auto">
           {memories.length === 0 ? (
             <p className="text-gray-400 text-center italic">Aún no hay recuerdos guardados.</p>
           ) : (

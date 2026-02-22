@@ -245,7 +245,7 @@ export const InitialSetup: React.FC<InitialSetupProps> = ({ onComplete }) => {
       userGender: config.userGender?.toLowerCase().includes('homb') ? 'male' : 'female',
       aiGender: isMaleAI ? 'male' : 'female',
       aiName: config.aiName || (isMaleAI ? 'Kael' : 'Selene'),
-      aiVoice: isMaleAI ? 'Puck' : 'Zephyr',
+      aiVoice: isMaleAI ? 'Charon' : 'Zephyr',
       userSociability: config.userSociability,
       initialSetupCompleted: true,
     });
