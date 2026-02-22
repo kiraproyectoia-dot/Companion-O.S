@@ -72,7 +72,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isReplying,
     };
     
     return (
-        <div className="flex-shrink-0 p-4 border-t border-white/5">
+        <div className="flex-shrink-0 p-4 border-t border-white/5 pb-[calc(1rem+var(--sab))]">
             {attachment && (
                 <div className="mb-2 flex items-center justify-between bg-neutral-800 p-2 rounded-lg text-sm animate-fade-in">
                    <div className="flex items-center gap-2 overflow-hidden">

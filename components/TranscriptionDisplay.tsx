@@ -83,7 +83,7 @@ export const TranscriptionDisplay: React.FC<TranscriptionDisplayProps> = ({ tran
     }, [transcripts, isReplying, isSpeaking]);
 
     return (
-        <div ref={scrollRef} className="flex-grow p-6 space-y-6 overflow-y-auto pr-3 scroll-smooth" style={{ scrollbarWidth: 'thin' }}>
+        <div ref={scrollRef} className="flex-grow min-h-[100px] p-4 sm:p-6 space-y-4 sm:space-y-6 overflow-y-auto pr-3 scroll-smooth" style={{ scrollbarWidth: 'thin' }}>
             {transcripts.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full gap-4 opacity-20">
                     <div className="w-12 h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent" />

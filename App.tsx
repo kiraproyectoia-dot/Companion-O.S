@@ -95,7 +95,7 @@ const App: React.FC = () => {
   if (!initialSetupCompleted) return <InitialSetup onComplete={handleInitialSetupComplete} />;
 
   return (
-    <div className="relative text-white min-h-screen flex flex-col items-center justify-center p-4 font-sans bg-black overflow-hidden" onDragOver={(e) => { e.preventDefault(); setIsDragActive(true); }}>
+    <div className="relative text-white min-h-[100dvh] flex flex-col items-center justify-center p-0 sm:p-4 font-sans bg-black overflow-hidden" onDragOver={(e) => { e.preventDefault(); setIsDragActive(true); }}>
        <div className="scan-line" />
        
        {isDragActive && (
@@ -108,16 +108,16 @@ const App: React.FC = () => {
       {showWelcomeBack && <WelcomeBack onClose={handleWelcomeBackClose} />}
       {showInfo && <WelcomeGuide onClose={() => setShowInfo(false)} />}
       
-      <div className="relative w-full max-w-5xl h-[95vh] flex flex-col bg-neutral-900/20 rounded-3xl shadow-2xl backdrop-blur-md border border-white/5 overflow-hidden transition-all duration-700" onDrop={handleDrop}>
-        <header className="flex items-center justify-between px-8 py-6 border-b border-white/5 flex-shrink-0 z-10">
+      <div className="relative w-full max-w-5xl h-full sm:h-[95dvh] flex flex-col bg-neutral-900/20 sm:rounded-3xl shadow-2xl backdrop-blur-md border border-white/5 overflow-hidden transition-all duration-700" onDrop={handleDrop}>
+        <header className="flex items-center justify-between px-4 sm:px-8 py-4 sm:py-6 border-b border-white/5 flex-shrink-0 z-10 pt-[calc(0.5rem+var(--sat))]">
           <div className="flex items-center gap-6">
              <div className="flex flex-col cursor-pointer group" onClick={() => setShowInfo(true)}>
-                <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-white to-purple-400 tracking-[0.3em] uppercase leading-none drop-shadow-[0_0_8px_rgba(168,85,247,0.5)] transition-all group-hover:scale-105">
+                <h1 className="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-white to-purple-400 tracking-[0.3em] uppercase leading-none drop-shadow-[0_0_8px_rgba(168,85,247,0.5)] transition-all group-hover:scale-105">
                   Ly-Os
                 </h1>
-                <div className="flex items-center gap-2 mt-2">
+                <div className="flex items-center gap-2 mt-1 sm:mt-2">
                    <StatusIndicator isConnected={isConnected} isConnecting={isConnecting} isReconnecting={isReconnecting} />
-                   <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest">{isConnected ? (profile.aiName || 'Conciencia Activa') : 'Terminal Standby'}</span>
+                   <span className="text-[7px] sm:text-[8px] font-black text-gray-500 uppercase tracking-widest">{isConnected ? (profile.aiName || 'Conciencia Activa') : 'Terminal Standby'}</span>
                 </div>
              </div>
           </div>
@@ -140,29 +140,29 @@ const App: React.FC = () => {
             <Avatar modelUrl={currentAvatarUrl} isSpeaking={isSpeaking} currentGesture={currentGesture} currentEmotion={currentEmotion} getAudioVolume={getAudioVolume} />
 
             {(isCameraActive || isScreenShareActive) && (
-              <div className="absolute top-6 left-6 z-30 w-44 aspect-video rounded-xl border border-white/10 bg-black/80 overflow-hidden shadow-2xl backdrop-blur-md">
+              <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-30 w-32 sm:w-44 aspect-video rounded-xl border border-white/10 bg-black/80 overflow-hidden shadow-2xl backdrop-blur-md">
                  <div className="absolute top-2 right-2 z-10 bg-red-500 w-1.5 h-1.5 rounded-full animate-pulse" />
-                 <div className="w-full h-full flex items-center justify-center bg-purple-900/10 italic text-[7px] text-purple-400 font-black uppercase tracking-[0.3em]">Enlace de Visión</div>
+                 <div className="w-full h-full flex items-center justify-center bg-purple-900/10 italic text-[6px] sm:text-[7px] text-purple-400 font-black uppercase tracking-[0.3em]">Enlace de Visión</div>
               </div>
             )}
 
             {showStartButton && (
                 <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/40 backdrop-blur-md animate-fade-in">
-                    <button onClick={() => startSession()} className="group relative px-14 py-7 bg-transparent overflow-hidden rounded-2xl transition-all hover:scale-105 active:scale-95">
+                    <button onClick={() => startSession()} className="group relative px-10 py-5 sm:px-14 sm:py-7 bg-transparent overflow-hidden rounded-2xl transition-all hover:scale-105 active:scale-95">
                         <div className="absolute inset-0 bg-white/5 border border-white/10 group-hover:bg-purple-500/20 group-hover:border-purple-500/40 transition-all" />
-                        <span className="relative z-10 text-white font-black text-[10px] uppercase tracking-[0.4em] flex items-center gap-6">
+                        <span className="relative z-10 text-white font-black text-[8px] sm:text-[10px] uppercase tracking-[0.4em] flex items-center gap-4 sm:gap-6">
                            <MicOnIcon /> Vincular Ly-Os
                         </span>
                     </button>
-                    <p className="mt-8 text-gray-600 text-[8px] font-black uppercase tracking-[0.6em]">Iniciando protocolo de interfaz humana</p>
+                    <p className="mt-6 sm:mt-8 text-gray-600 text-[7px] sm:text-[8px] font-black uppercase tracking-[0.6em] text-center px-4">Iniciando protocolo de interfaz humana</p>
                 </div>
              )}
           </div>
           
           {isChatVisible && (
-            <div className="flex-shrink-0 flex flex-col h-[35vh] bg-neutral-900/90 border-t border-white/5 backdrop-blur-3xl z-20">
-               <div className="flex items-center justify-between px-6 py-3 border-b border-white/5 flex-shrink-0">
-                  <h3 className="text-[8px] font-black text-purple-400 uppercase tracking-[0.4em]">Registro de Consola</h3>
+            <div className="flex-shrink-0 flex flex-col h-[40dvh] sm:h-[35dvh] bg-neutral-900/95 border-t border-white/5 backdrop-blur-3xl z-20 pb-[var(--sab)]">
+               <div className="flex items-center justify-between px-4 sm:px-6 py-2 sm:py-3 border-b border-white/5 flex-shrink-0">
+                  <h3 className="text-[7px] sm:text-[8px] font-black text-purple-400 uppercase tracking-[0.4em]">Registro de Consola</h3>
                   <button onClick={clearChatHistory} className="p-2 text-gray-600 hover:text-red-500 transition-colors"><TrashIcon /></button>
                </div>
                <TranscriptionDisplay transcripts={transcripts} isReplying={isReplying} isSpeaking={isSpeaking} saveImageMemory={saveImageMemory} />
