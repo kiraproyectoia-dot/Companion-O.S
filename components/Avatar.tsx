@@ -152,7 +152,9 @@ const AvatarModel: React.FC<ModelProps> = ({ modelUrl, isSpeaking, currentGestur
     setVisemes(discoveredVisemes);
     setEmotionMorphs(discoveredEmotions);
 
-    return () => mixer.current?.stopAllAction();
+    return () => {
+      mixer.current?.stopAllAction();
+    };
   }, [scene, animations, modelUrl]);
 
   useEffect(() => {

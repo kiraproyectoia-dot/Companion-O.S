@@ -64,7 +64,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isReplying,
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if ((text.trim() || attachment) && !isReplying) {
+        if ((text.trim() || attachment)) {
             onSendMessage({ message: text, attachment: attachment || undefined });
             setText('');
             handleClearAttachment();
@@ -85,15 +85,15 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isReplying,
                    <button onClick={handleClearAttachment} className="text-gray-400 hover:text-white font-bold text-lg px-2">&times;</button>
                 </div>
             )}
-            <form onSubmit={handleSubmit} className={isReplying ? 'opacity-50' : ''}>
+            <form onSubmit={handleSubmit}>
                 <div className="relative flex items-center">
                     <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*,text/plain,application/pdf" />
-                    <button type="button" onClick={() => fileInputRef.current?.click()} className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full text-gray-400 hover:text-white hover:bg-neutral-700 transition-colors" disabled={isReplying}>
+                    <button type="button" onClick={() => fileInputRef.current?.click()} className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full text-gray-400 hover:text-white hover:bg-neutral-700 transition-colors">
                         <AttachmentIcon />
                     </button>
-                    <input type="text" value={text} onChange={(e) => setText(e.target.value)} placeholder={placeholder} className="w-full bg-gray-900/50 border border-neutral-700 rounded-full py-2 pl-12 pr-12 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all" autoComplete="off" disabled={isReplying} />
-                    <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-neutral-700 hover:bg-neutral-600 disabled:bg-gray-500 disabled:cursor-not-allowed transition-colors" disabled={(!text.trim() && !attachment) || isReplying}>
-                        <SendIcon />
+                    <input type="text" value={text} onChange={(e) => setText(e.target.value)} placeholder={placeholder} className="w-full bg-gray-900/50 border border-neutral-700 rounded-full py-2 pl-12 pr-12 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all" autoComplete="off" />
+                    <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-neutral-700 hover:bg-neutral-600 disabled:bg-gray-500 disabled:cursor-not-allowed transition-colors" disabled={(!text.trim() && !attachment)}>
+                        {isReplying ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <SendIcon />}
                     </button>
                 </div>
             </form>

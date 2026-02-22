@@ -82,6 +82,7 @@ export const useLiveSession = () => {
   const isPausedRef = useRef(false);
   const isConnectedRef = useRef(false);
   const isTextTurnRef = useRef(false);
+  const isReplyingRef = useRef(false);
   
   const sessionPromiseRef = useRef<Promise<any> | null>(null);
   const sessionRef = useRef<any>(null);
@@ -107,6 +108,7 @@ export const useLiveSession = () => {
   useEffect(() => { isMutedRef.current = isMuted; }, [isMuted]);
   useEffect(() => { isPausedRef.current = isPaused; }, [isPaused]);
   useEffect(() => { isConnectedRef.current = isConnected; }, [isConnected]);
+  useEffect(() => { isReplyingRef.current = isReplying; }, [isReplying]);
 
   const requestWakeLock = useCallback(async () => {
     if ('wakeLock' in navigator && document.visibilityState === 'visible') {
@@ -248,6 +250,10 @@ export const useLiveSession = () => {
         ${memoryContext}
         ${historyContext}
         
+        MODALIDAD DE RESPUESTA:
+        - Si el usuario te escribe por consola (verás el prefijo "(USUARIO ESCRIBE POR CONSOLA)"), responde ÚNICAMENTE por texto de forma clara y concisa. No esperes que el usuario te escuche, asume que te está leyendo.
+        - Si el usuario te habla por voz (no verás prefijo), responde de forma natural con audio y texto.
+        
         INDICACIÓN DE RECONEXIÓN: Acabas de reestablecer el enlace neuronal. No actúes como si fuera la primera vez si ya hay historial. Saluda recordando algo de lo mencionado arriba para demostrar que tu memoria es continua y real.`;
 
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
@@ -281,6 +287,7 @@ export const useLiveSession = () => {
             setIsConnected(true);
             isConnectedRef.current = true;
             setIsConnecting(false);
+            isTextTurnRef.current = false;
             
             scriptProcessorRef.current = inCtx.createScriptProcessor(4096, 1, 1);
             const silentGain = inCtx.createGain();
@@ -290,12 +297,6 @@ export const useLiveSession = () => {
               if (isMutedRef.current || isPausedRef.current || !isConnectedRef.current) return;
               const inputData = e.inputBuffer.getChannelData(0);
               
-              let sum = 0;
-              for(let i=0; i<inputData.length; i++) sum += Math.abs(inputData[i]);
-              if (sum/inputData.length > 0.005) {
-                  isTextTurnRef.current = false;
-              }
-
               sessionPromiseRef.current?.then(session => {
                 if (session) session.sendRealtimeInput({ media: createBlob(inputData) });
               });
@@ -322,6 +323,7 @@ export const useLiveSession = () => {
             }
 
             if (message.serverContent?.outputTranscription) {
+              setIsReplying(true);
               const textChunk = message.serverContent.outputTranscription.text;
               const emotionMatch = textChunk.match(/\[emotion:(.*?)\]/);
               if (emotionMatch) {
@@ -359,11 +361,13 @@ export const useLiveSession = () => {
               currentUserTranscriptionRef.current = '';
               setIsReplying(false);
               setIsSpeaking(false);
+              isTextTurnRef.current = false;
               setTranscripts(prev => prev.map(t => ({ ...t, isFinal: true })));
             }
 
             const audioData = message.serverContent?.modelTurn?.parts?.[0]?.inlineData?.data;
             if (audioData && !isTextTurnRef.current) {
+              setIsReplying(true);
               setIsSpeaking(true);
               nextStartTimeRef.current = Math.max(nextStartTimeRef.current, outCtx.currentTime);
               const buffer = await decodeAudioData(decode(audioData), outCtx, 24000, 1);
@@ -382,6 +386,7 @@ export const useLiveSession = () => {
             if (message.serverContent?.interrupted) {
               stopAudio();
               setIsSpeaking(false);
+              setIsReplying(false);
               vibrate([20, 20]);
             }
 
@@ -454,6 +459,8 @@ export const useLiveSession = () => {
     if (scriptProcessorRef.current) scriptProcessorRef.current.disconnect();
     setIsConnected(false);
     isConnectedRef.current = false;
+    setIsReplying(false);
+    isTextTurnRef.current = false;
     releaseWakeLock();
     vibrate(30);
   }, [stopAudio, stopVideoStream, vibrate, releaseWakeLock]);
@@ -569,6 +576,13 @@ export const useLiveSession = () => {
 
   const sendTextMessage = useCallback(async ({ message, attachment }: { message: string, attachment?: any }) => {
     if (!sessionRef.current || !isConnected) return;
+    
+    // Interrupt current audio if agent is speaking
+    if (isSpeaking) {
+        stopAudio();
+        setIsSpeaking(false);
+    }
+    
     setIsReplying(true);
     isTextTurnRef.current = true; 
     addTranscript(TranscriptSource.USER, message, true, attachment);
@@ -577,9 +591,9 @@ export const useLiveSession = () => {
     if (attachment && attachment.type.startsWith('image/')) {
         const base64Data = attachment.dataUrl.split(',')[1];
         sessionRef.current.sendRealtimeInput({ media: { data: base64Data, mimeType: attachment.type } });
-        if (message.trim()) sessionRef.current.sendRealtimeInput({ text: message });
+        if (message.trim()) sessionRef.current.sendRealtimeInput({ text: `(USUARIO ESCRIBE POR CONSOLA) ${message}` });
     } else {
-        sessionRef.current.sendRealtimeInput({ text: message });
+        sessionRef.current.sendRealtimeInput({ text: `(USUARIO ESCRIBE POR CONSOLA) ${message}` });
     }
   }, [isConnected, addTranscript, vibrate]);
 

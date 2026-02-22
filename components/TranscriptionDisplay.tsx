@@ -36,6 +36,10 @@ const TranscriptBubble: React.FC<{ entry: TranscriptEntry; onSaveMemory: (entry:
     });
   };
 
+  const cleanText = (text: string) => {
+    return text.replace(/^\(USUARIO ESCRIBE POR CONSOLA\)\s*/, '');
+  };
+
   return (
     <div className={`relative group max-w-[85%] sm:max-w-md md:max-w-lg p-4 rounded-2xl transition-all duration-300 shadow-xl flex flex-col gap-3 ${bubbleClass} ${opacityClass}`}>
       {entry.attachment?.dataUrl && (
@@ -44,7 +48,7 @@ const TranscriptBubble: React.FC<{ entry: TranscriptEntry; onSaveMemory: (entry:
       {entry.imageUrl && (
         <img src={entry.imageUrl} alt="Imagen generada por Ly-Os" className="rounded-xl max-h-64 w-auto object-contain self-center border border-purple-500/20 shadow-[0_0_20px_rgba(168,85,247,0.2)]" />
       )}
-      {entry.text && <p className="text-white/90 text-sm leading-relaxed tracking-tight">{renderTextWithLinks(entry.text)}</p>}
+      {entry.text && <p className="text-white/90 text-sm leading-relaxed tracking-tight">{renderTextWithLinks(cleanText(entry.text))}</p>}
       
       {isUser && entry.attachment && (
         <button onClick={() => onSaveMemory(entry)} className="absolute -left-3 -top-3 p-2 bg-purple-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-purple-500 shadow-[0_0_15px_rgba(147,51,234,0.5)] scale-90 group-hover:scale-100" aria-label="Guardar" title="Guardar en Memoria">
