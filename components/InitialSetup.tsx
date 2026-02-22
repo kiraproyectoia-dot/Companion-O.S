@@ -253,9 +253,9 @@ export const InitialSetup: React.FC<InitialSetupProps> = ({ onComplete }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[200] bg-black flex flex-col items-center justify-center p-8 overflow-hidden font-sans">
+    <div className="fixed inset-0 z-[200] bg-black flex flex-col items-center justify-center p-4 sm:p-8 overflow-hidden font-sans">
       <div className="absolute inset-0 bg-neutral-900/10" />
-      <div className="relative w-full max-w-xl flex flex-col items-center gap-12 z-10">
+      <div className="relative w-full max-w-xl flex flex-col items-center gap-8 sm:gap-12 z-10">
         <div className="relative">
            <div className={`absolute inset-0 rounded-full blur-[60px] transition-all duration-700 ${isSpeaking ? 'bg-purple-500/20 shadow-[0_0_50px_rgba(192,132,252,0.3)]' : 'bg-transparent'}`} />
            <div className={`relative w-40 h-40 rounded-full flex items-center justify-center border transition-all duration-1000 ${isSpeaking ? 'border-purple-400/30' : 'border-white/5'}`}>

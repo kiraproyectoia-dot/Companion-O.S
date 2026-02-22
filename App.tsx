@@ -95,7 +95,7 @@ const App: React.FC = () => {
   if (!initialSetupCompleted) return <InitialSetup onComplete={handleInitialSetupComplete} />;
 
   return (
-    <div className="relative text-white min-h-[100dvh] flex flex-col items-center justify-center p-0 sm:p-4 font-sans bg-black overflow-hidden" onDragOver={(e) => { e.preventDefault(); setIsDragActive(true); }}>
+    <div className="relative text-white h-[100dvh] w-full flex flex-col items-center justify-center p-0 sm:p-4 font-sans bg-black overflow-hidden" onDragOver={(e) => { e.preventDefault(); setIsDragActive(true); }}>
        <div className="scan-line" />
        
        {isDragActive && (
@@ -108,7 +108,7 @@ const App: React.FC = () => {
       {showWelcomeBack && <WelcomeBack onClose={handleWelcomeBackClose} />}
       {showInfo && <WelcomeGuide onClose={() => setShowInfo(false)} />}
       
-      <div className="relative w-full max-w-5xl h-full sm:h-[95dvh] flex flex-col bg-neutral-900/20 sm:rounded-3xl shadow-2xl backdrop-blur-md border border-white/5 overflow-hidden transition-all duration-700" onDrop={handleDrop}>
+      <div className="relative w-full max-w-5xl h-[100dvh] sm:h-[95dvh] flex flex-col bg-neutral-900/20 sm:rounded-3xl shadow-2xl backdrop-blur-md border border-white/5 overflow-hidden transition-all duration-700" onDrop={handleDrop}>
         <header className="flex items-center justify-between px-4 sm:px-8 py-4 sm:py-6 border-b border-white/5 flex-shrink-0 z-10 pt-[calc(0.5rem+var(--sat))]">
           <div className="flex items-center gap-6">
              <div className="flex flex-col cursor-pointer group" onClick={() => setShowInfo(true)}>
