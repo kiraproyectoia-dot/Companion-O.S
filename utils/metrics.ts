@@ -53,6 +53,9 @@ const getUserId = () => {
 let currentSessionId: string | null = null;
 
 export const trackMetric = (event: MetricEvent, data?: Record<string, any>) => {
+  // Metrics tracking is currently disabled
+  return;
+  
   if (event === 'session_start') {
     currentSessionId = crypto.randomUUID();
   }

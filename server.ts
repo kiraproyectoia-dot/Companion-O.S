@@ -3,30 +3,9 @@ import { createServer as createViteServer } from "vite";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import * as admin from "firebase-admin";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// Initialize Firebase Admin if credentials are provided
-let db: admin.firestore.Firestore | null = null;
-try {
-  if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
-    admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-      }),
-    });
-    db = admin.firestore();
-    console.log("Firebase initialized successfully");
-  } else {
-    console.log("Firebase credentials missing, skipping Firestore export");
-  }
-} catch (error) {
-  console.error("Error initializing Firebase:", error);
-}
 
 async function startServer() {
   const app = express();
@@ -37,48 +16,14 @@ async function startServer() {
   // In-memory session tracking for duration calculation
   const activeSessions = new Map<string, string>();
 
-  // API endpoint for metrics
+  // API endpoint for metrics (Disabled)
   app.post("/api/metrics", (req, res) => {
-    const { event: eventName, sessionId, timestamp } = req.body;
-    
-    const event: any = {
-      ...req.body,
-      timestamp: timestamp || new Date().toISOString()
-    };
+    res.status(200).send({ status: "metrics_disabled" });
+  });
 
-    if (eventName === 'session_start' && sessionId) {
-      activeSessions.set(sessionId, event.timestamp);
-    } else if (eventName === 'session_end' && sessionId) {
-      const startTimeStr = activeSessions.get(sessionId);
-      if (startTimeStr) {
-        const startTime = new Date(startTimeStr).getTime();
-        const endTime = new Date(event.timestamp).getTime();
-        const durationMs = endTime - startTime;
-        event.data = { ...event.data, durationSeconds: Math.round(durationMs / 1000) };
-        activeSessions.delete(sessionId);
-      }
-    }
-    
-    // Log to console for immediate visibility in agent logs
-    console.log("[METRIC EVENT]:", JSON.stringify(event));
-    
-    // Export to Firestore if configured
-    if (db) {
-      console.log(`[FIRESTORE]: Exporting event "${eventName || event.event}" to collection "metrics"...`);
-      db.collection("metrics").add(event)
-        .then(doc => console.log(`[FIRESTORE SUCCESS]: Document written with ID: ${doc.id}`))
-        .catch(err => {
-          console.error("[FIRESTORE ERROR]: Error exporting to Firestore:", err);
-        });
-    } else {
-      console.log("[FIRESTORE SKIP]: Database not initialized. Check environment variables.");
-    }
-    
-    // Also save to a file
-    const logPath = path.join(__dirname, "metrics.jsonl");
-    fs.appendFileSync(logPath, JSON.stringify(event) + "\n");
-    
-    res.status(204).send();
+  // API endpoint for metrics summary (Disabled)
+  app.get("/api/metrics/summary", (req, res) => {
+    res.json({ status: "metrics_disabled", message: "Metrics collection is currently paused." });
   });
 
   // Vite middleware for development
