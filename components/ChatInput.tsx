@@ -2,8 +2,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { SendIcon, AttachmentIcon } from '../constants';
 
-import { trackMetric } from '../utils/metrics';
-
 interface ChatInputProps {
     onSendMessage: (payload: { message: string; attachment?: { dataUrl: string; name: string; type: string; } }) => void;
     isReplying: boolean;

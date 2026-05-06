@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GoogleGenAI, LiveServerMessage, Modality, Type, FunctionDeclaration } from '@google/genai';
 import { updateProfile } from '../utils/profile';
-import { trackMetric } from '../utils/metrics';
 import { addMemory } from '../utils/memory';
 import { MemoryType } from '../types';
 import { decode, decodeAudioData, createBlob } from '../utils/audio';
@@ -95,7 +94,6 @@ export const InitialSetup: React.FC<InitialSetupProps> = ({ onComplete }) => {
     cleanupSession();
     
     try {
-      trackMetric('protocol_iniciado');
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
 
@@ -240,11 +238,6 @@ export const InitialSetup: React.FC<InitialSetupProps> = ({ onComplete }) => {
   };
 
   const finalize = () => {
-    trackMetric('protocol_completado', { 
-      aiName: config.aiName, 
-      gender: config.aiGender, 
-      voice: config.aiGender?.toLowerCase().includes('homb') ? 'Charon' : 'Zephyr' 
-    });
     cleanupSession();
     const isMaleAI = config.aiGender?.toLowerCase().includes('homb') || config.aiGender?.toLowerCase().includes('masc');
     updateProfile({

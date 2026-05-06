@@ -11,7 +11,6 @@ import { TranscriptEntry, TranscriptSource, MemoryType } from '../types';
 import { getProfile } from '../utils/profile';
 import { getHistory, saveHistory, clearHistory } from '../utils/history';
 import { getMemories, addMemory } from '../utils/memory';
-import { trackMetric } from '../utils/metrics';
 import { encode, decode, decodeAudioData, createBlob } from '../utils/audio';
 import { useHaptics } from './useHaptics';
 
@@ -225,7 +224,6 @@ export const useLiveSession = () => {
     }
 
     try {
-      trackMetric('session_start');
       // 1. CRITICAL: Request microphone IMMEDIATELY on click event.
       // Many mobile browsers deny access if called after multiple async/await layers.
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -364,59 +362,34 @@ export const useLiveSession = () => {
 
                 // 4. Progresión afectiva y 5. Memoria/Conflictos
                 if (lowerText.includes('perdón') || lowerText.includes('disculpa') || lowerText.includes('lo siento')) {
-                  trackMetric('conflicto_emocional', { tipo: 'IA_disculpa', text: cleanText.substring(0, 50), sentiment });
                   lastConflictTimestampRef.current = Date.now();
                 }
                 
                 if (lowerText.includes('vínculo') || lowerText.includes('conexión') || lowerText.includes('relación')) {
-                  let stage = 'conocimiento';
-                  if (lowerText.includes('profundo') || lowerText.includes('confianza')) stage = 'confianza';
-                  if (lowerText.includes('especial') || lowerText.includes('afecto')) stage = 'afecto';
-                  if (lowerText.includes('vida') || lowerText.includes('siempre')) stage = 'romanticismo';
-                  
-                  trackMetric('etapa_relacional', { context: cleanText.substring(0, 50), stage, sentiment });
+                  // No metrics
                 }
 
                 if (lowerText.includes('recuerdo') || lowerText.includes('memoria') || lowerText.includes('acuerdas')) {
-                  trackMetric('memoria_emocional', { reference: cleanText.substring(0, 50), sentiment });
+                  // No metrics
                 }
 
                 if (lowerText.includes('proyecto') || lowerText.includes('plan') || lowerText.includes('avances')) {
-                  trackMetric('seguimiento_proyecto', { project: cleanText.substring(0, 50), status: 'mention', sentiment });
+                  // No metrics
                 }
                 
                 if (cleanText.includes('?')) {
-                  trackMetric('pregunta_profundidad', { text: cleanText.substring(0, 50), sentiment });
-                }
-
-                // Topic detection
-                const topics = {
-                  emocional: ['siento', 'emoción', 'sentimiento', 'corazón'],
-                  proyecto: ['proyecto', 'plan', 'idea', 'trabajo', 'objetivo'],
-                  ocio: ['juego', 'película', 'música', 'diversión', 'tiempo libre'],
-                  conflicto: ['problema', 'discusión', 'diferencia', 'tensión']
-                };
-
-                for (const [topic, keywords] of Object.entries(topics)) {
-                  if (keywords.some(k => lowerText.includes(k))) {
-                    trackMetric('tema_interaccion', { topic, sentiment });
-                    break;
-                  }
+                  // No metrics
                 }
               }
             }
 
             if (message.serverContent?.inputTranscription) {
               const userText = message.serverContent.inputTranscription.text;
-              trackMetric('mensaje_voz', { length: userText.length });
-              trackMetric('modo_interaccion', { mode: 'voice' });
               
               // Conflict resolution detection
               if (lastConflictTimestampRef.current) {
                 const lowerUserText = userText.toLowerCase();
                 if (lowerUserText.includes('gracias') || lowerUserText.includes('está bien') || lowerUserText.includes('entiendo') || lowerUserText.includes('perdón')) {
-                  const duration = Math.round((Date.now() - lastConflictTimestampRef.current) / 1000);
-                  trackMetric('conflicto_resuelto', { duration, resultado: 'positivo' });
                   lastConflictTimestampRef.current = null;
                 }
               }
@@ -524,7 +497,6 @@ export const useLiveSession = () => {
   };
 
   const hardCloseSession = useCallback(() => {
-    trackMetric('session_end');
     if (sessionRef.current) sessionRef.current.close();
     stopAudio();
     stopVideoStream();
@@ -546,7 +518,6 @@ export const useLiveSession = () => {
   const toggleMute = useCallback(() => {
     const newMute = !isMuted;
     setIsMuted(newMute);
-    if (!newMute) trackMetric('voz_activada');
     vibrate(10);
   }, [isMuted, vibrate]);
 
@@ -555,7 +526,6 @@ export const useLiveSession = () => {
       stopVideoStream();
     } else {
       try {
-        trackMetric('camara_activada');
         stopVideoStream();
         const stream = await navigator.mediaDevices.getUserMedia({ 
             video: { facingMode: cameraFacingMode } 
@@ -661,15 +631,11 @@ export const useLiveSession = () => {
     
     setIsReplying(true);
     isTextTurnRef.current = true; 
-    trackMetric('mensaje_texto', { length: message.length });
-    trackMetric('modo_interaccion', { mode: 'text', hasAttachment: !!attachment });
 
     // Conflict resolution detection for text
     if (lastConflictTimestampRef.current) {
       const lowerUserText = message.toLowerCase();
       if (lowerUserText.includes('gracias') || lowerUserText.includes('está bien') || lowerUserText.includes('entiendo') || lowerUserText.includes('perdón')) {
-        const duration = Math.round((Date.now() - lastConflictTimestampRef.current) / 1000);
-        trackMetric('conflicto_resuelto', { duration, resultado: 'positivo' });
         lastConflictTimestampRef.current = null;
       }
     }

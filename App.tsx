@@ -13,7 +13,6 @@ import { WelcomeGuide } from './components/WelcomeGuide';
 import { LILY_BACKGROUND_MEDIA_URL, TrashIcon, AttachmentIcon, MicOnIcon } from './constants';
 import { MediaPlayer } from './components/MediaPlayer';
 import { getProfile } from './utils/profile';
-import { trackMetric } from './utils/metrics';
 
 // Standard elements like 'div', 'button', etc., are already defined by React's type definitions.
 // Three.js elements used in the Avatar component are handled via @react-three/fiber's built-in type support.
@@ -62,39 +61,13 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (profile.initialSetupCompleted) {
-      const lastVisit = profile.lastInteractionTimestamp;
-      const now = Date.now();
-      const daysSinceLastVisit = (now - lastVisit) / (1000 * 60 * 60 * 24);
-      trackMetric('retention_check', { daysSinceLastVisit, aiName: profile.aiName });
-      
-      // Track loading awareness and avatar
-      trackMetric('cargar_conciencia', { aiName: profile.aiName });
-      trackMetric('avatar_cargado', { gender: profile.aiGender, voice: profile.aiVoice });
-      trackMetric('idioma', { language: navigator.language });
+      // Retention track logic could stay as local side-effect if needed, 
+      // but without trackMetric it's useless for tracking.
     }
   }, []);
 
   useEffect(() => {
-    let startTime = Date.now();
-    
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        const duration = Math.round((Date.now() - startTime) / 1000);
-        if (duration > 0) trackMetric('avatar_visible', { duration });
-      } else {
-        startTime = Date.now();
-      }
-    };
-
-    window.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('beforeunload', () => {
-      const duration = Math.round((Date.now() - startTime) / 1000);
-      if (duration > 0) trackMetric('avatar_visible', { duration });
-    });
-
-    return () => {
-      window.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
+    // Visibility logic removed
   }, []);
 
   const initialSetupCompleted = useMemo(() => profile.initialSetupCompleted, [profile]);
